@@ -20,6 +20,7 @@ const emptyState = document.getElementById('empty-state');
 // Referencias a elementos de estadísticas y sugerencias
 const statsTotalTime = document.getElementById('stats-total-time');
 const statsTodayTime = document.getElementById('stats-today-time');
+const statsMonthDays = document.getElementById('stats-month-days');
 const statsTopTopic = document.getElementById('stats-top-topic');
 const statsTotalSessions = document.getElementById('stats-total-sessions');
 const topicsList = document.getElementById('topics-list');
@@ -189,14 +190,19 @@ function calculateStats(sessions) {
       totalTimeFormatted: '0 min',
       todayTimeFormatted: '0 min',
       todayMinutes: 0,
+      monthDaysFormatted: '0 días',
       topTopic: '—',
       totalSessions: 0,
     };
   }
 
   const todayStr = getPastDateString(0);
+  const now = new Date();
+  const currentYearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
   let totalMinutes = 0;
   let todayMinutes = 0;
+  const monthDates = new Set();
 
   // Agrupador de minutos por tema (insensible a mayúsculas/minúsculas)
   const topicMinutesMap = {};
@@ -208,6 +214,11 @@ function calculateStats(sessions) {
 
     if (session.date === todayStr) {
       todayMinutes += mins;
+    }
+
+    // Registrar días únicos estudiados en el mes local actual
+    if (session.date && session.date.startsWith(currentYearMonth)) {
+      monthDates.add(session.date);
     }
 
     const trimmedTopic = session.topic.trim();
@@ -230,10 +241,14 @@ function calculateStats(sessions) {
     }
   }
 
+  const monthDaysCount = monthDates.size;
+  const monthDaysFormatted = monthDaysCount === 1 ? '1 día' : `${monthDaysCount} días`;
+
   return {
     totalTimeFormatted: formatMinutes(totalMinutes),
     todayTimeFormatted: formatMinutes(todayMinutes),
     todayMinutes: todayMinutes,
+    monthDaysFormatted: monthDaysFormatted,
     topTopic: topTopicName,
     totalSessions: sessions.length,
   };
@@ -271,6 +286,7 @@ function render() {
   const stats = calculateStats(sessions);
   statsTotalTime.textContent = stats.totalTimeFormatted;
   statsTodayTime.textContent = stats.todayTimeFormatted;
+  statsMonthDays.textContent = stats.monthDaysFormatted;
   statsTopTopic.textContent = stats.topTopic;
   statsTotalSessions.textContent = stats.totalSessions;
 

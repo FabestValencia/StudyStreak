@@ -4,6 +4,8 @@
 
 // Clave para guardar en el almacenamiento del navegador (localStorage)
 const STORAGE_KEY = 'diario_estudio_sesiones';
+const GOAL_STORAGE_KEY = 'diario_estudio_meta_diaria';
+const DEFAULT_DAILY_GOAL = 60;
 
 // Referencias a los elementos del DOM (HTML)
 const sessionForm = document.getElementById('session-form');
@@ -21,6 +23,12 @@ const statsTodayTime = document.getElementById('stats-today-time');
 const statsTopTopic = document.getElementById('stats-top-topic');
 const statsTotalSessions = document.getElementById('stats-total-sessions');
 const topicsList = document.getElementById('topics-list');
+
+// Referencias para la meta diaria
+const goalProgressText = document.getElementById('goal-progress-text');
+const goalProgressFill = document.getElementById('goal-progress-fill');
+const goalBadge = document.getElementById('goal-badge');
+const editGoalBtn = document.getElementById('edit-goal-btn');
 
 // Referencias para edición y acciones del formulario
 const formSection = document.getElementById('form-section');
@@ -80,6 +88,26 @@ function getStoredSessions() {
  */
 function saveSessions(sessions) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+}
+
+/**
+ * Obtiene la meta diaria en minutos guardada en localStorage.
+ * Si no existe o no es válida, devuelve el valor por defecto.
+ */
+function getStoredDailyGoal() {
+  const rawGoal = localStorage.getItem(GOAL_STORAGE_KEY);
+  if (!rawGoal) {
+    return DEFAULT_DAILY_GOAL;
+  }
+  const parsed = parseInt(rawGoal, 10);
+  return isNaN(parsed) || parsed <= 0 ? DEFAULT_DAILY_GOAL : parsed;
+}
+
+/**
+ * Guarda la meta diaria en minutos en localStorage.
+ */
+function saveDailyGoal(minutes) {
+  localStorage.setItem(GOAL_STORAGE_KEY, String(minutes));
 }
 
 // ==========================================
@@ -160,6 +188,7 @@ function calculateStats(sessions) {
     return {
       totalTimeFormatted: '0 min',
       todayTimeFormatted: '0 min',
+      todayMinutes: 0,
       topTopic: '—',
       totalSessions: 0,
     };
@@ -204,6 +233,7 @@ function calculateStats(sessions) {
   return {
     totalTimeFormatted: formatMinutes(totalMinutes),
     todayTimeFormatted: formatMinutes(todayMinutes),
+    todayMinutes: todayMinutes,
     topTopic: topTopicName,
     totalSessions: sessions.length,
   };
@@ -237,12 +267,29 @@ function render() {
   streakCount.textContent = streak;
   streakLabel.textContent = streak === 1 ? 'día de racha' : 'días de racha';
 
-  // 2. Calcular y actualizar estadísticas
+  // 2. Calcular y actualizar estadísticas y meta diaria
   const stats = calculateStats(sessions);
   statsTotalTime.textContent = stats.totalTimeFormatted;
   statsTodayTime.textContent = stats.todayTimeFormatted;
   statsTopTopic.textContent = stats.topTopic;
   statsTotalSessions.textContent = stats.totalSessions;
+
+  // Actualizar indicador de meta diaria
+  const dailyGoal = getStoredDailyGoal();
+  const todayMinutes = stats.todayMinutes || 0;
+  const percentage = Math.round((todayMinutes / dailyGoal) * 100);
+  const visualPercentage = Math.min(100, percentage);
+
+  goalProgressText.textContent = `${todayMinutes} / ${dailyGoal} min (${percentage}%)`;
+  goalProgressFill.style.width = `${visualPercentage}%`;
+
+  if (todayMinutes >= dailyGoal) {
+    goalProgressFill.classList.add('completed');
+    goalBadge.style.display = 'inline-block';
+  } else {
+    goalProgressFill.classList.remove('completed');
+    goalBadge.style.display = 'none';
+  }
 
   // 3. Actualizar sugerencias de temas en el formulario
   updateTopicsDatalist(sessions);
@@ -448,6 +495,32 @@ sessionForm.addEventListener('submit', (event) => {
 
 // Botón para cancelar la edición
 cancelEditBtn.addEventListener('click', cancelEdit);
+
+/**
+ * Permite al usuario modificar su meta diaria de estudio.
+ */
+function handleEditGoal() {
+  const currentGoal = getStoredDailyGoal();
+  const input = window.prompt('Define tu meta diaria de estudio en minutos (ej. 30, 60, 90):', String(currentGoal));
+
+  if (input === null) {
+    return; // Cancelado por el usuario
+  }
+
+  const newGoal = parseInt(input.trim(), 10);
+  if (isNaN(newGoal) || newGoal <= 0) {
+    window.alert('Por favor, introduce un número entero de minutos mayor a 0.');
+    return;
+  }
+
+  saveDailyGoal(newGoal);
+  render();
+}
+
+// Botón para editar la meta diaria
+if (editGoalBtn) {
+  editGoalBtn.addEventListener('click', handleEditGoal);
+}
 
 // Inicialización cuando carga la página
 function init() {

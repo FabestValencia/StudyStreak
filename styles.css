@@ -149,6 +149,94 @@ body {
   color: var(--text-secondary);
 }
 
+/* Indicador de Meta Diaria */
+.goal-container {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.goal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.goal-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.goal-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.goal-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #15803d;
+  background-color: #dcfce7;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid #bbf7d0;
+  animation: pulseGoal 2s infinite ease-in-out;
+}
+
+@keyframes pulseGoal {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.goal-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.goal-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 10px;
+  background-color: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  border-radius: 999px;
+  transition: width 0.4s ease, background-color 0.4s ease;
+  width: 0%;
+}
+
+.progress-bar-fill.completed {
+  background-color: #16a34a;
+}
+
 /* Formulario */
 .form-group {
   display: flex;

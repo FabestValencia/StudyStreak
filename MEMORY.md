@@ -13,11 +13,13 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Eliminados todos los estilos inline (`style=...`) en `index.html`, trasladando los estados iniciales a `styles.css`.
 - Verificación funcional con Chromium DevTools: 3 sesiones consecutivas (hoy, ayer, anteayer) validadas con racha en 3, récord en 3 y 0 errores en consola.
 - Constitución del proyecto formalizada en `docs/constitution.md` (6 principios innegociables).
+- Plan técnico y tareas listas: `specs/001-heat-map/spec.md`, `plan.md` y `tasks.md` (9 tareas atómicas ordenadas por dependencia con TDD, trazabilidad completa de RFs).
 - Lógica intacta: cálculo de racha viva en hora local, persistencia y retrocompatibilidad total.
 - Rama activa: main
 
 ## Decisiones (y por qué)
 
+- [2026-10] Mapa de calor en spec 001: Lunes a domingo, escala fija de 4 niveles y vista adaptativa (12 semanas en escritorio, 4 en móvil).
 - [2026-10] Mejor racha con aritmética local: `new Date(y, m-1, d)` con `setDate(getDate() + 1)` para evitar desajustes por cambio de horario o UTC.
 - [2026-10] Cuadrícula simétrica 2x3: 6 tarjetas de métricas en el resumen visualmente equilibradas.
 - [2026-10] Tokens CSS con tema dual: Cuida la vista en sesiones de estudio nocturnas sin dependencias externas.

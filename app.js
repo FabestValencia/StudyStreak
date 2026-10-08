@@ -15,6 +15,13 @@ const streakLabel = document.getElementById('streak-label');
 const sessionsList = document.getElementById('sessions-list');
 const emptyState = document.getElementById('empty-state');
 
+// Referencias a elementos de estadísticas y sugerencias
+const statsTotalTime = document.getElementById('stats-total-time');
+const statsTodayTime = document.getElementById('stats-today-time');
+const statsTopTopic = document.getElementById('stats-top-topic');
+const statsTotalSessions = document.getElementById('stats-total-sessions');
+const topicsList = document.getElementById('topics-list');
+
 // ==========================================
 // Utilidades de Fechas (Hora local del usuario)
 // ==========================================
@@ -109,11 +116,109 @@ function calculateStreak(sessions) {
 }
 
 // ==========================================
+// Cálculo de Estadísticas y Utilidades
+// ==========================================
+
+/**
+ * Convierte una cantidad de minutos a una cadena legible (ej: 45 min, 1 h, 2 h 15 min).
+ */
+function formatMinutes(totalMinutes) {
+  if (!totalMinutes || totalMinutes <= 0) {
+    return '0 min';
+  }
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours === 0) {
+    return `${minutes} min`;
+  }
+  if (minutes === 0) {
+    return `${hours} h`;
+  }
+  return `${hours} h ${minutes} min`;
+}
+
+/**
+ * Calcula métricas acumuladas de estudio:
+ * - Tiempo total
+ * - Tiempo invertido hoy
+ * - Tema con más minutos dedicados
+ * - Cantidad total de sesiones
+ */
+function calculateStats(sessions) {
+  if (!sessions || sessions.length === 0) {
+    return {
+      totalTimeFormatted: '0 min',
+      todayTimeFormatted: '0 min',
+      topTopic: '—',
+      totalSessions: 0,
+    };
+  }
+
+  const todayStr = getPastDateString(0);
+  let totalMinutes = 0;
+  let todayMinutes = 0;
+
+  // Agrupador de minutos por tema (insensible a mayúsculas/minúsculas)
+  const topicMinutesMap = {};
+  const topicOriginalNames = {};
+
+  sessions.forEach((session) => {
+    const mins = Number(session.minutes) || 0;
+    totalMinutes += mins;
+
+    if (session.date === todayStr) {
+      todayMinutes += mins;
+    }
+
+    const trimmedTopic = session.topic.trim();
+    const normalizedKey = trimmedTopic.toLowerCase();
+
+    topicMinutesMap[normalizedKey] = (topicMinutesMap[normalizedKey] || 0) + mins;
+    if (!topicOriginalNames[normalizedKey]) {
+      topicOriginalNames[normalizedKey] = trimmedTopic;
+    }
+  });
+
+  // Determinar el tema principal
+  let topTopicName = '—';
+  let maxMinutes = 0;
+
+  for (const [key, minutes] of Object.entries(topicMinutesMap)) {
+    if (minutes > maxMinutes) {
+      maxMinutes = minutes;
+      topTopicName = topicOriginalNames[key];
+    }
+  }
+
+  return {
+    totalTimeFormatted: formatMinutes(totalMinutes),
+    todayTimeFormatted: formatMinutes(todayMinutes),
+    topTopic: topTopicName,
+    totalSessions: sessions.length,
+  };
+}
+
+/**
+ * Actualiza la lista de sugerencias del datalist con los temas ya registrados.
+ */
+function updateTopicsDatalist(sessions) {
+  const uniqueTopics = Array.from(new Set(sessions.map((s) => s.topic.trim()))).filter(Boolean);
+  topicsList.innerHTML = '';
+  uniqueTopics.forEach((topic) => {
+    const option = document.createElement('option');
+    option.value = topic;
+    topicsList.appendChild(option);
+  });
+}
+
+// ==========================================
 // Renderizado de la Interfaz (UI)
 // ==========================================
 
 /**
- * Actualiza la vista completa: contador de racha y lista de sesiones.
+ * Actualiza la vista completa: racha, estadísticas, sugerencias e historial.
  */
 function render() {
   const sessions = getStoredSessions();
@@ -123,7 +228,17 @@ function render() {
   streakCount.textContent = streak;
   streakLabel.textContent = streak === 1 ? 'día de racha' : 'días de racha';
 
-  // 2. Ordenar las sesiones: de la más reciente a la más antigua
+  // 2. Calcular y actualizar estadísticas
+  const stats = calculateStats(sessions);
+  statsTotalTime.textContent = stats.totalTimeFormatted;
+  statsTodayTime.textContent = stats.todayTimeFormatted;
+  statsTopTopic.textContent = stats.topTopic;
+  statsTotalSessions.textContent = stats.totalSessions;
+
+  // 3. Actualizar sugerencias de temas en el formulario
+  updateTopicsDatalist(sessions);
+
+  // 4. Ordenar las sesiones: de la más reciente a la más antigua
   const sortedSessions = [...sessions].sort((a, b) => {
     // Primero comparamos la fecha de la sesión (descendente)
     if (a.date !== b.date) {

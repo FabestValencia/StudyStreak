@@ -22,6 +22,41 @@
       </div>
     </section>
 
+    <!-- Sección de Estadísticas -->
+    <section class="card stats-card" id="stats-section">
+      <h2>Resumen de estudio</h2>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <span class="stat-icon">⏱️</span>
+          <div class="stat-info">
+            <span class="stat-value" id="stats-total-time">0 min</span>
+            <span class="stat-label">Tiempo total</span>
+          </div>
+        </div>
+        <div class="stat-box">
+          <span class="stat-icon">📅</span>
+          <div class="stat-info">
+            <span class="stat-value" id="stats-today-time">0 min</span>
+            <span class="stat-label">Estudiado hoy</span>
+          </div>
+        </div>
+        <div class="stat-box">
+          <span class="stat-icon">🎯</span>
+          <div class="stat-info">
+            <span class="stat-value" id="stats-top-topic">—</span>
+            <span class="stat-label">Tema principal</span>
+          </div>
+        </div>
+        <div class="stat-box">
+          <span class="stat-icon">📚</span>
+          <div class="stat-info">
+            <span class="stat-value" id="stats-total-sessions">0</span>
+            <span class="stat-label">Sesiones totales</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Formulario para Registrar Sesión -->
     <section class="card">
       <h2>Registrar sesión</h2>
@@ -33,7 +68,8 @@
 
         <div class="form-group">
           <label for="topic">Tema</label>
-          <input type="text" id="topic" placeholder="Ej. Bucles en JavaScript" required>
+          <input type="text" id="topic" list="topics-list" placeholder="Ej. Bucles en JavaScript" required>
+          <datalist id="topics-list"></datalist>
         </div>
 
         <div class="form-group">

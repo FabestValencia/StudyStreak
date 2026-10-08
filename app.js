@@ -21,11 +21,13 @@ const emptyState = document.getElementById('empty-state');
 const statsTotalTime = document.getElementById('stats-total-time');
 const statsTodayTime = document.getElementById('stats-today-time');
 const statsMonthDays = document.getElementById('stats-month-days');
+const statsBestStreak = document.getElementById('stats-best-streak');
 const statsTopTopic = document.getElementById('stats-top-topic');
 const statsTotalSessions = document.getElementById('stats-total-sessions');
 const topicsList = document.getElementById('topics-list');
 
 // Referencias para la meta diaria
+const goalProgressTrack = document.getElementById('goal-progress-track');
 const goalProgressText = document.getElementById('goal-progress-text');
 const goalProgressFill = document.getElementById('goal-progress-fill');
 const goalBadge = document.getElementById('goal-badge');
@@ -163,6 +165,48 @@ function calculateStreak(sessions) {
   return streak;
 }
 
+/**
+ * Calcula la mejor racha histórica de días consecutivos estudiados:
+ * - Encuentra la secuencia consecutiva más larga en todo el historial.
+ * - Respeta las fechas locales y aritmética mediante setDate() sin conversiones UTC.
+ */
+function calculateBestStreak(sessions) {
+  if (!sessions || sessions.length === 0) {
+    return 0;
+  }
+
+  // Fechas únicas ordenadas cronológicamente ('AAAA-MM-DD' se ordena lexicográficamente)
+  const uniqueDates = Array.from(new Set(sessions.map((session) => session.date))).sort();
+  if (uniqueDates.length === 0) {
+    return 0;
+  }
+
+  let maxStreak = 1;
+  let currentStreak = 1;
+
+  for (let i = 1; i < uniqueDates.length; i++) {
+    const prevParts = uniqueDates[i - 1].split('-').map(Number);
+    // Parseo local de fecha: new Date(year, month - 1, day)
+    const prevDate = new Date(prevParts[0], prevParts[1] - 1, prevParts[2]);
+    prevDate.setDate(prevDate.getDate() + 1);
+    const expectedDateStr = getLocalDateString(prevDate);
+
+    if (uniqueDates[i] === expectedDateStr) {
+      currentStreak++;
+    } else {
+      currentStreak = 1;
+    }
+
+    if (currentStreak > maxStreak) {
+      maxStreak = currentStreak;
+    }
+  }
+
+  // La mejor racha debe ser al menos igual a la racha activa actual
+  const activeStreak = calculateStreak(sessions);
+  return Math.max(maxStreak, activeStreak);
+}
+
 // ==========================================
 // Cálculo de Estadísticas y Utilidades
 // ==========================================
@@ -193,6 +237,7 @@ function formatMinutes(totalMinutes) {
  * - Tiempo invertido hoy
  * - Tema con más minutos dedicados
  * - Cantidad total de sesiones
+ * - Mejor racha histórica
  */
 function calculateStats(sessions) {
   if (!sessions || sessions.length === 0) {
@@ -201,6 +246,7 @@ function calculateStats(sessions) {
       todayTimeFormatted: '0 min',
       todayMinutes: 0,
       monthDaysFormatted: '0 días',
+      bestStreakFormatted: '0 días',
       topTopic: '—',
       totalSessions: 0,
     };
@@ -254,11 +300,15 @@ function calculateStats(sessions) {
   const monthDaysCount = monthDates.size;
   const monthDaysFormatted = monthDaysCount === 1 ? '1 día' : `${monthDaysCount} días`;
 
+  const bestStreak = calculateBestStreak(sessions);
+  const bestStreakFormatted = bestStreak === 1 ? '1 día' : `${bestStreak} días`;
+
   return {
     totalTimeFormatted: formatMinutes(totalMinutes),
     todayTimeFormatted: formatMinutes(todayMinutes),
     todayMinutes: todayMinutes,
     monthDaysFormatted: monthDaysFormatted,
+    bestStreakFormatted: bestStreakFormatted,
     topTopic: topTopicName,
     totalSessions: sessions.length,
   };
@@ -321,6 +371,9 @@ function render() {
   statsTotalTime.textContent = stats.totalTimeFormatted;
   statsTodayTime.textContent = stats.todayTimeFormatted;
   statsMonthDays.textContent = stats.monthDaysFormatted;
+  if (statsBestStreak) {
+    statsBestStreak.textContent = stats.bestStreakFormatted;
+  }
   statsTopTopic.textContent = stats.topTopic;
   statsTotalSessions.textContent = stats.totalSessions;
 
@@ -332,6 +385,9 @@ function render() {
 
   goalProgressText.textContent = `${todayMinutes} / ${dailyGoal} min (${percentage}%)`;
   goalProgressFill.style.width = `${visualPercentage}%`;
+  if (goalProgressTrack) {
+    goalProgressTrack.setAttribute('aria-valuenow', String(percentage));
+  }
 
   if (todayMinutes >= dailyGoal) {
     goalProgressFill.classList.add('completed');

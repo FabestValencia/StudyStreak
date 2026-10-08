@@ -437,6 +437,7 @@ body {
 }
 
 .goal-badge {
+  display: none;
   font-size: 0.72rem;
   font-weight: 700;
   color: var(--success-color);
@@ -497,6 +498,7 @@ body {
 }
 
 .edit-pill {
+  display: none;
   font-size: 0.75rem;
   font-weight: 700;
   color: #b45309;
@@ -639,6 +641,10 @@ body {
 .btn-secondary:hover {
   background-color: var(--border-card);
   color: var(--text-main);
+}
+
+#cancel-edit-btn {
+  display: none;
 }
 
 /* Sección de Historial */

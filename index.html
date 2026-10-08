@@ -74,13 +74,20 @@
               </div>
             </div>
             <div class="stat-box">
+              <span class="stat-icon" aria-hidden="true">🏆</span>
+              <div class="stat-info">
+                <span class="stat-value" id="stats-best-streak">0 días</span>
+                <span class="stat-label">Mejor racha</span>
+              </div>
+            </div>
+            <div class="stat-box">
               <span class="stat-icon" aria-hidden="true">📚</span>
               <div class="stat-info">
                 <span class="stat-value" id="stats-total-sessions">0</span>
                 <span class="stat-label">Sesiones totales</span>
               </div>
             </div>
-            <div class="stat-box stat-box-wide">
+            <div class="stat-box">
               <span class="stat-icon" aria-hidden="true">🎯</span>
               <div class="stat-info">
                 <span class="stat-value" id="stats-top-topic">—</span>
@@ -95,15 +102,15 @@
               <div class="goal-title-wrap">
                 <span class="goal-icon" aria-hidden="true">🎯</span>
                 <span class="goal-title">Meta diaria</span>
-                <span class="goal-badge" id="goal-badge" style="display: none;">¡Meta cumplida! 🎉</span>
+                <span class="goal-badge" id="goal-badge">¡Meta cumplida! 🎉</span>
               </div>
               <div class="goal-actions">
                 <span class="goal-text" id="goal-progress-text">0 / 60 min (0%)</span>
                 <button type="button" class="icon-btn" id="edit-goal-btn" title="Ajustar meta diaria" aria-label="Ajustar meta diaria">✏️</button>
               </div>
             </div>
-            <div class="progress-bar-track" role="progressbar" aria-label="Progreso de meta diaria" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar-fill" id="goal-progress-fill" style="width: 0%;"></div>
+            <div class="progress-bar-track" id="goal-progress-track" role="progressbar" aria-label="Progreso de meta diaria" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="progress-bar-fill" id="goal-progress-fill"></div>
             </div>
           </div>
         </section>
@@ -115,10 +122,10 @@
         <section class="card form-card" id="form-section" aria-labelledby="form-title">
           <div class="card-header">
             <h2 id="form-title">Registrar sesión</h2>
-            <div id="edit-indicator" class="edit-pill" style="display: none;">Modo edición</div>
+            <div id="edit-indicator" class="edit-pill">Modo edición</div>
           </div>
 
-          <form id="session-form" novalidate>
+          <form id="session-form">
             <div class="form-group">
               <label for="date">Fecha</label>
               <input type="date" id="date" required>
@@ -148,7 +155,7 @@
 
             <div class="form-actions">
               <button type="submit" class="btn btn-primary" id="submit-btn">Guardar sesión</button>
-              <button type="button" class="btn btn-secondary" id="cancel-edit-btn" style="display: none;">Cancelar</button>
+              <button type="button" class="btn btn-secondary" id="cancel-edit-btn">Cancelar</button>
             </div>
           </form>
         </section>

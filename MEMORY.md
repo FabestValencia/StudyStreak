@@ -8,12 +8,17 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Tipografía Plus Jakarta Sans y JetBrains Mono para datos numéricos y fechas.
 - Ergonomía UX: Botones rápidos (+15, +30, +45, +60 min), filtro en historial y badge de edición.
 - Soporte automático para Modo Oscuro (`prefers-color-scheme: dark`) y reducción de movimiento.
-- Verificación funcional con Chromium DevTools: 3 sesiones consecutivas (hoy, ayer, anteayer) validadas con racha en 3 y consola limpia (0 errores).
+- Métrica "Mejor racha" 🏆 añadida al resumen: calcula el récord histórico de días consecutivos con fechas locales (`calculateBestStreak`).
+- Eliminado `novalidate` en formulario para habilitar validación HTML5 nativa y añadido `aria-valuenow` dinámico a la barra de progreso.
+- Eliminados todos los estilos inline (`style=...`) en `index.html`, trasladando los estados iniciales a `styles.css`.
+- Verificación funcional con Chromium DevTools: 3 sesiones consecutivas (hoy, ayer, anteayer) validadas con racha en 3, récord en 3 y 0 errores en consola.
 - Lógica intacta: cálculo de racha viva en hora local, persistencia y retrocompatibilidad total.
 - Rama activa: main
 
 ## Decisiones (y por qué)
 
+- [2026-10] Mejor racha con aritmética local: `new Date(y, m-1, d)` con `setDate(getDate() + 1)` para evitar desajustes por cambio de horario o UTC.
+- [2026-10] Cuadrícula simétrica 2x3: 6 tarjetas de métricas en el resumen visualmente equilibradas.
 - [2026-10] Tokens CSS con tema dual: Cuida la vista en sesiones de estudio nocturnas sin dependencias externas.
 - [2026-10] Presets de minutos rápidos: Reducen fricción al registrar sesiones con 1 clic.
 - [2026-10] Filtro reactivo en el historial: Búsqueda instantánea en el DOM preservando `localStorage`.

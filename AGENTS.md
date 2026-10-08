@@ -63,6 +63,10 @@ Comandos exactos y reproducibles:
   - Hacer push directo o modificaciones en ramas protegidas (`main`, `production`).
 
 ## 8. Verificación (Definition of Done)
+No hay tests automáticos. Después de cada cambio, verifica con el MCP de Chrome DevTools: abre `index.html`, prueba la funcionalidad, revisa la consola y comprueba la vista móvil.
+
+Para empezar de cero: DevTools → Application → Local Storage → borrar la clave `diario_estudio_sesiones` (o `diario-estudio-sesiones`).
+
 Antes de dar cualquier tarea por completada:
 1. El proyecto funciona abriendo `index.html` con doble clic (`file://`) sin errores en la consola del navegador.
 2. Los flujos de usuario (registro de sesión, visualización de historial y cálculo de racha) funcionan correctamente.

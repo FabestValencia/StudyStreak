@@ -10,11 +10,14 @@
   * `styles.css`: Sistema de diseño, paleta de colores, diseño responsive y estados visuales.
   * `app.js`: Manejo de fechas en hora local, lógica de cálculo de racha, persistencia y renderizado del DOM.
   * `MEMORY.md`: Registro de memoria viva y decisiones de desarrollo del proyecto.
+  * `docs/constitution.md`: Principios innegociables del proyecto.
 * **Configuración local:** Sin instalación ni dependencias previas. Abrir directamente `index.html` en el navegador (doble clic o mediante protocolo `file://`).
 
 ## 2. Comandos
 
 Comandos exactos y reproducibles:
+
+-Tests: `node --test`
 
 * **Dev:** Abrir en el navegador predeterminado (PowerShell en Windows):
 
@@ -26,6 +29,10 @@ Comandos exactos y reproducibles:
 * **Test:** Verificación manual en navegador (inspeccionar consola en DevTools y validar flujo de formulario, persistencia tras recargar y cálculo de racha).
 * **Lint & Fix:** No aplica herramienta de linting externa. Mantener consistencia manual de formato y sintaxis JavaScript estándar.
 * **Build / Typecheck:** No aplica (proyecto sin paso de build; JavaScript interpretado directamente por el navegador).
+
+## Reglas
+
+-Lee `docs/constitution.md` y la spec activa (`specs/NNN-*/`) antes de tocar código.
 
 ## 3. Convenciones y patrones
 

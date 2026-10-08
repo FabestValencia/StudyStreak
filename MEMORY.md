@@ -12,6 +12,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Eliminado `novalidate` en formulario para habilitar validación HTML5 nativa y añadido `aria-valuenow` dinámico a la barra de progreso.
 - Eliminados todos los estilos inline (`style=...`) en `index.html`, trasladando los estados iniciales a `styles.css`.
 - Verificación funcional con Chromium DevTools: 3 sesiones consecutivas (hoy, ayer, anteayer) validadas con racha en 3, récord en 3 y 0 errores en consola.
+- Constitución del proyecto formalizada en `docs/constitution.md` (6 principios innegociables).
 - Lógica intacta: cálculo de racha viva en hora local, persistencia y retrocompatibilidad total.
 - Rama activa: main
 

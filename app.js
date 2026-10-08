@@ -22,6 +22,15 @@ const statsTopTopic = document.getElementById('stats-top-topic');
 const statsTotalSessions = document.getElementById('stats-total-sessions');
 const topicsList = document.getElementById('topics-list');
 
+// Referencias para edición y acciones del formulario
+const formSection = document.getElementById('form-section');
+const formTitle = document.getElementById('form-title');
+const submitBtn = document.getElementById('submit-btn');
+const cancelEditBtn = document.getElementById('cancel-edit-btn');
+
+// Estado de la sesión actualmente en edición (null si es nueva)
+let editingSessionId = null;
+
 // ==========================================
 // Utilidades de Fechas (Hora local del usuario)
 // ==========================================
@@ -248,7 +257,7 @@ function render() {
     return b.id - a.id;
   });
 
-  // 3. Renderizar la lista
+  // 4. Renderizar la lista
   sessionsList.innerHTML = '';
 
   if (sortedSessions.length === 0) {
@@ -274,12 +283,43 @@ function render() {
       infoDiv.appendChild(topicSpan);
       infoDiv.appendChild(dateSpan);
 
+      // Contenedor derecho: minutos y botones de acción
+      const rightDiv = document.createElement('div');
+      rightDiv.className = 'session-right';
+
       const minutesSpan = document.createElement('span');
       minutesSpan.className = 'session-minutes';
       minutesSpan.textContent = `${session.minutes} min`;
 
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'session-actions';
+
+      // Botón editar
+      const editBtn = document.createElement('button');
+      editBtn.type = 'button';
+      editBtn.className = 'icon-btn';
+      editBtn.title = 'Editar sesión';
+      editBtn.setAttribute('aria-label', `Editar sesión: ${session.topic}`);
+      editBtn.textContent = '✏️';
+      editBtn.addEventListener('click', () => startEditSession(session.id));
+
+      // Botón eliminar
+      const deleteBtn = document.createElement('button');
+      deleteBtn.type = 'button';
+      deleteBtn.className = 'icon-btn icon-btn-delete';
+      deleteBtn.title = 'Eliminar sesión';
+      deleteBtn.setAttribute('aria-label', `Eliminar sesión: ${session.topic}`);
+      deleteBtn.textContent = '🗑️';
+      deleteBtn.addEventListener('click', () => deleteSession(session.id));
+
+      actionsDiv.appendChild(editBtn);
+      actionsDiv.appendChild(deleteBtn);
+
+      rightDiv.appendChild(minutesSpan);
+      rightDiv.appendChild(actionsDiv);
+
       li.appendChild(infoDiv);
-      li.appendChild(minutesSpan);
+      li.appendChild(rightDiv);
 
       sessionsList.appendChild(li);
     });
@@ -287,10 +327,78 @@ function render() {
 }
 
 // ==========================================
+// Acciones de Edición y Eliminación
+// ==========================================
+
+/**
+ * Carga los datos de una sesión en el formulario para editarla.
+ */
+function startEditSession(id) {
+  const sessions = getStoredSessions();
+  const sessionToEdit = sessions.find((s) => s.id === id);
+
+  if (!sessionToEdit) {
+    return;
+  }
+
+  editingSessionId = id;
+
+  // Llenar los campos con los datos actuales
+  dateInput.value = sessionToEdit.date;
+  topicInput.value = sessionToEdit.topic;
+  minutesInput.value = sessionToEdit.minutes;
+
+  // Actualizar títulos y botones
+  formTitle.textContent = 'Editar sesión';
+  submitBtn.textContent = 'Actualizar sesión';
+  cancelEditBtn.style.display = 'inline-block';
+
+  // Desplazar la vista al formulario y enfocar el campo de tema
+  formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  topicInput.focus();
+}
+
+/**
+ * Cancela el modo de edición y regresa el formulario al modo habitual.
+ */
+function cancelEdit() {
+  editingSessionId = null;
+
+  topicInput.value = '';
+  minutesInput.value = '';
+  dateInput.value = getLocalDateString();
+
+  formTitle.textContent = 'Registrar sesión';
+  submitBtn.textContent = 'Guardar sesión';
+  cancelEditBtn.style.display = 'none';
+}
+
+/**
+ * Elimina una sesión del almacenamiento con confirmación previa.
+ */
+function deleteSession(id) {
+  const confirmed = window.confirm('¿Seguro que deseas eliminar esta sesión?');
+  if (!confirmed) {
+    return;
+  }
+
+  // Si se está editando la sesión que se va a eliminar, cancelar la edición
+  if (editingSessionId === id) {
+    cancelEdit();
+  }
+
+  const sessions = getStoredSessions();
+  const updatedSessions = sessions.filter((s) => s.id !== id);
+  saveSessions(updatedSessions);
+
+  render();
+}
+
+// ==========================================
 // Eventos y Inicialización
 // ==========================================
 
-// Al enviar el formulario
+// Al enviar el formulario (Crear o Actualizar)
 sessionForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
@@ -303,27 +411,43 @@ sessionForm.addEventListener('submit', (event) => {
     return;
   }
 
-  const newSession = {
-    id: Date.now(),
-    date: selectedDate,
-    topic: topic,
-    minutes: minutes,
-  };
-
   const sessions = getStoredSessions();
-  sessions.push(newSession);
-  saveSessions(sessions);
 
-  // Limpiar campos de texto y minutos
-  topicInput.value = '';
-  minutesInput.value = '';
+  if (editingSessionId !== null) {
+    // Modo Actualización: buscar y modificar la sesión existente
+    const sessionIndex = sessions.findIndex((s) => s.id === editingSessionId);
+    if (sessionIndex !== -1) {
+      sessions[sessionIndex] = {
+        ...sessions[sessionIndex],
+        date: selectedDate,
+        topic: topic,
+        minutes: minutes,
+      };
+      saveSessions(sessions);
+    }
+    cancelEdit();
+  } else {
+    // Modo Creación: agregar una nueva sesión
+    const newSession = {
+      id: Date.now(),
+      date: selectedDate,
+      topic: topic,
+      minutes: minutes,
+    };
+    sessions.push(newSession);
+    saveSessions(sessions);
 
-  // Restablecer la fecha por defecto a hoy
-  dateInput.value = getLocalDateString();
+    topicInput.value = '';
+    minutesInput.value = '';
+    dateInput.value = getLocalDateString();
+  }
 
-  // Actualizar la pantalla
+  // Actualizar la pantalla (racha, estadísticas, sugerencias y lista)
   render();
 });
+
+// Botón para cancelar la edición
+cancelEditBtn.addEventListener('click', cancelEdit);
 
 // Inicialización cuando carga la página
 function init() {

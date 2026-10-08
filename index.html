@@ -57,9 +57,9 @@
       </div>
     </section>
 
-    <!-- Formulario para Registrar Sesión -->
-    <section class="card">
-      <h2>Registrar sesión</h2>
+    <!-- Formulario para Registrar o Editar Sesión -->
+    <section class="card" id="form-section">
+      <h2 id="form-title">Registrar sesión</h2>
       <form id="session-form">
         <div class="form-group">
           <label for="date">Fecha</label>
@@ -77,7 +77,10 @@
           <input type="number" id="minutes" min="1" placeholder="Ej. 45" required>
         </div>
 
-        <button type="submit" class="btn">Guardar sesión</button>
+        <div class="form-actions">
+          <button type="submit" class="btn" id="submit-btn">Guardar sesión</button>
+          <button type="button" class="btn btn-secondary" id="cancel-edit-btn" style="display: none;">Cancelar</button>
+        </div>
       </form>
     </section>
 

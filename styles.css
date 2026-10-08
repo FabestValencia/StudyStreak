@@ -179,9 +179,14 @@ body {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-/* Botón principal */
+/* Botones */
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
 .btn {
-  width: 100%;
+  flex: 1;
   padding: 12px;
   font-size: 1rem;
   font-weight: 600;
@@ -191,10 +196,20 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s;
+  text-align: center;
 }
 
 .btn:hover {
   background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: #e5e7eb;
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background-color: #d1d5db;
 }
 
 /* Lista de sesiones */
@@ -240,6 +255,38 @@ body {
   padding: 4px 10px;
   border-radius: 12px;
   white-space: nowrap;
+}
+
+.session-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.session-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.icon-btn {
+  background: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  line-height: 1;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.icon-btn:hover {
+  background-color: #e5e7eb;
+}
+
+.icon-btn-delete:hover {
+  background-color: #fee2e2;
+  border-color: #fecaca;
 }
 
 /* Estado vacío */

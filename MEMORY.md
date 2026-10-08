@@ -13,7 +13,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Eliminados todos los estilos inline (`style=...`) en `index.html`, trasladando los estados iniciales a `styles.css`.
 - Verificación funcional con Chromium DevTools: 3 sesiones consecutivas (hoy, ayer, anteayer) validadas con racha en 3, récord en 3 y 0 errores en consola.
 - Constitución del proyecto formalizada en `docs/constitution.md` (6 principios innegociables).
-- Plan técnico y tareas listas: `specs/001-heat-map/spec.md`, `plan.md` y `tasks.md` (9 tareas atómicas ordenadas por dependencia con TDD, trazabilidad completa de RFs).
+- Tarea 1 completada: `test/heatmap.test.js` creado con tests nativos de escala y agregación (fase RED de TDD lista para T2).
 - Lógica intacta: cálculo de racha viva en hora local, persistencia y retrocompatibilidad total.
 - Rama activa: main
 

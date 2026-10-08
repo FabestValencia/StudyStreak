@@ -11,7 +11,7 @@
 ### Tarea 1: Suite de tests unitarios para escala y agregación de sesiones
 * **Descripción:** Crear el directorio `test/` y el archivo `test/heatmap.test.js` utilizando el ejecutor nativo `node:test` y `node:assert/strict`. Definir las pruebas unitarias para `getActivityLevel` (rangos de minutos) y `aggregateMinutesByDate` (suma acumulada, descarte de fechas futuras, fechas malformadas y minutos negativos/nulos).
 * **RF cubiertos:** [RF-4](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L54-L64), [CL-1](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L106), [CL-2](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L107), [CL-3](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L108), [CL-4](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L109).
-* [ ] **Hecho cuando:** El archivo `test/heatmap.test.js` existe y describe todos los casos de prueba de escala y agregación listos para ejecutarse con `node --test`.
+* [x] **Hecho cuando:** El archivo `test/heatmap.test.js` existe y describe todos los casos de prueba de escala y agregación listos para ejecutarse con `node --test`.
 
 ---
 

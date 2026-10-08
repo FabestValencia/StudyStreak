@@ -3,21 +3,19 @@
 Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo que ya no aporte.
 
 ## Estado actual
-- Base funcional completa: `index.html`, `styles.css` y `app.js`.
-- Registro, edición (✏️) y eliminación (🗑️) de sesiones en `localStorage` (`diario_estudio_sesiones`).
-- Contador de racha 🔥 y métrica de días estudiados en el mes local (`stats-month-days`).
-- Panel de estadísticas en tiempo real y sugerencias en `<datalist>`.
-- Indicador de meta diaria integrado en el Resumen con barra de progreso dinámica.
-- Historial interactivo con botones de acción y confirmación preventiva de borrado.
+- Rediseño UI/UX completo: Estética Deep Focus / Hearth Glow con dashboard 2 columnas y móvil responsivo.
+- Tipografía Plus Jakarta Sans y JetBrains Mono para datos numéricos y fechas.
+- Ergonomía UX: Botones rápidos (+15, +30, +45, +60 min), filtro en historial y badge de edición.
+- Soporte automático para Modo Oscuro (`prefers-color-scheme: dark`) y reducción de movimiento.
+- Lógica intacta: cálculo de racha viva en hora local, persistencia y retrocompatibilidad total.
 - Rama activa: main
 
 ## Decisiones (y por qué)
-- [2026-10] Días del mes con fecha local: Prefijo `AAAA-MM` local (`getFullYear()` y `getMonth() + 1`) agrupado con `Set` para contar días únicos activos sin desfases UTC.
-- [2026-10] Meta diaria desacoplada en `localStorage`: Clave `diario_estudio_meta_diaria` preserva retrocompatibilidad del esquema de sesiones.
-- [2026-10] Reutilización de formulario para edición: Evita modales pesados o desalineados en móviles.
-- [2026-10] Confirmación previa al borrar: Uso de `window.confirm` para evitar pérdidas accidentales.
-- [2026-10] Estadísticas derivadas en memoria: Se calculan dinámicamente al renderizar, manteniendo intacto el esquema de `localStorage`.
+- [2026-10] Tokens CSS con tema dual: Cuida la vista en sesiones de estudio nocturnas sin dependencias externas.
+- [2026-10] Presets de minutos rápidos: Reducen fricción al registrar sesiones con 1 clic.
+- [2026-10] Filtro reactivo en el historial: Búsqueda instantánea en el DOM preservando `localStorage`.
 - [2026-10] Fechas en hora local: `getFullYear()`, `getMonth() + 1` y `getDate()` evitan desfases por conversiones a UTC.
+- [2026-10] Meta diaria desacoplada en `localStorage`: Clave `diario_estudio_meta_diaria` preserva retrocompatibilidad.
 
 ## Aprendizajes y errores a evitar
 - Múltiples sesiones el mismo día deben contar como un solo día en el cómputo mensual.
@@ -25,4 +23,4 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Mantener retrocompatibilidad del objeto sesión `{ id, date, topic, minutes }`.
 
 ## Próximos pasos
-- [ ] Filtro o buscador de sesiones en el historial por fecha o texto.
+- [ ] Exportar / importar datos de sesiones en formato JSON para copias de seguridad.

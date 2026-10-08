@@ -3,118 +3,178 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diario de Estudio</title>
+  <meta name="description" content="Diario de Estudio: registra tus sesiones diarias, fomenta la constancia y mantén tu racha de aprendizaje.">
+  <title>Diario de Estudio — Foco y Racha Diaria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <header class="header">
-      <h1>Diario de Estudio</h1>
-      <p class="subtitle">Registra tu progreso y mantén tu constancia</p>
+  <div class="app-layout">
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-logo" aria-hidden="true">📖</span>
+        <div class="brand-text">
+          <h1>Diario de Estudio</h1>
+          <p class="subtitle">Registra tu progreso diario y fortalece tu constancia</p>
+        </div>
+      </div>
+      <div class="header-status-pill" id="header-status-pill" aria-live="polite">
+        <span class="status-indicator-dot"></span>
+        <span id="streak-header-text">Racha activa</span>
+      </div>
     </header>
 
-    <!-- Sección de Racha Actual -->
-    <section class="card streak-card">
-      <div class="streak-icon">🔥</div>
-      <div class="streak-content">
-        <span class="streak-number" id="streak-count">0</span>
-        <span class="streak-label" id="streak-label">días de racha</span>
+    <main class="dashboard-grid">
+      <!-- Columna Principal / Métricas y Racha -->
+      <div class="dashboard-col col-primary">
+        <!-- Sección de Racha Actual (Hero Card) -->
+        <section class="card streak-card" aria-labelledby="streak-title">
+          <div class="streak-visual">
+            <span class="streak-icon" role="img" aria-label="Fuego de racha">🔥</span>
+          </div>
+          <div class="streak-content">
+            <h2 id="streak-title" class="sr-only">Racha actual</h2>
+            <div class="streak-number-wrap">
+              <span class="streak-number" id="streak-count">0</span>
+              <span class="streak-label" id="streak-label">días de racha</span>
+            </div>
+            <p class="streak-status-msg" id="streak-status">Comienza hoy registrando tu primera sesión.</p>
+          </div>
+        </section>
+
+        <!-- Sección de Estadísticas y Meta Diaria -->
+        <section class="card stats-card" id="stats-section" aria-labelledby="stats-heading">
+          <div class="card-header">
+            <h2 id="stats-heading">Resumen de estudio</h2>
+            <span class="section-tag">Rendimiento</span>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <span class="stat-icon" aria-hidden="true">⏱️</span>
+              <div class="stat-info">
+                <span class="stat-value" id="stats-total-time">0 min</span>
+                <span class="stat-label">Tiempo total</span>
+              </div>
+            </div>
+            <div class="stat-box">
+              <span class="stat-icon" aria-hidden="true">📅</span>
+              <div class="stat-info">
+                <span class="stat-value" id="stats-today-time">0 min</span>
+                <span class="stat-label">Estudiado hoy</span>
+              </div>
+            </div>
+            <div class="stat-box">
+              <span class="stat-icon" aria-hidden="true">🗓️</span>
+              <div class="stat-info">
+                <span class="stat-value" id="stats-month-days">0 días</span>
+                <span class="stat-label">Días este mes</span>
+              </div>
+            </div>
+            <div class="stat-box">
+              <span class="stat-icon" aria-hidden="true">📚</span>
+              <div class="stat-info">
+                <span class="stat-value" id="stats-total-sessions">0</span>
+                <span class="stat-label">Sesiones totales</span>
+              </div>
+            </div>
+            <div class="stat-box stat-box-wide">
+              <span class="stat-icon" aria-hidden="true">🎯</span>
+              <div class="stat-info">
+                <span class="stat-value" id="stats-top-topic">—</span>
+                <span class="stat-label">Tema principal</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Indicador de Meta Diaria -->
+          <div class="goal-container" id="goal-section">
+            <div class="goal-header">
+              <div class="goal-title-wrap">
+                <span class="goal-icon" aria-hidden="true">🎯</span>
+                <span class="goal-title">Meta diaria</span>
+                <span class="goal-badge" id="goal-badge" style="display: none;">¡Meta cumplida! 🎉</span>
+              </div>
+              <div class="goal-actions">
+                <span class="goal-text" id="goal-progress-text">0 / 60 min (0%)</span>
+                <button type="button" class="icon-btn" id="edit-goal-btn" title="Ajustar meta diaria" aria-label="Ajustar meta diaria">✏️</button>
+              </div>
+            </div>
+            <div class="progress-bar-track" role="progressbar" aria-label="Progreso de meta diaria" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar-fill" id="goal-progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
 
-    <!-- Sección de Estadísticas -->
-    <section class="card stats-card" id="stats-section">
-      <h2>Resumen de estudio</h2>
-      <div class="stats-grid">
-        <div class="stat-box">
-          <span class="stat-icon">⏱️</span>
-          <div class="stat-info">
-            <span class="stat-value" id="stats-total-time">0 min</span>
-            <span class="stat-label">Tiempo total</span>
+      <!-- Columna Secundaria / Formulario e Historial -->
+      <div class="dashboard-col col-secondary">
+        <!-- Formulario para Registrar o Editar Sesión -->
+        <section class="card form-card" id="form-section" aria-labelledby="form-title">
+          <div class="card-header">
+            <h2 id="form-title">Registrar sesión</h2>
+            <div id="edit-indicator" class="edit-pill" style="display: none;">Modo edición</div>
           </div>
-        </div>
-        <div class="stat-box">
-          <span class="stat-icon">📅</span>
-          <div class="stat-info">
-            <span class="stat-value" id="stats-today-time">0 min</span>
-            <span class="stat-label">Estudiado hoy</span>
+
+          <form id="session-form" novalidate>
+            <div class="form-group">
+              <label for="date">Fecha</label>
+              <input type="date" id="date" required>
+            </div>
+
+            <div class="form-group">
+              <label for="topic">Tema o materia</label>
+              <input type="text" id="topic" list="topics-list" placeholder="Ej. Algoritmos de ordenamiento" autocomplete="off" required>
+              <datalist id="topics-list"></datalist>
+            </div>
+
+            <div class="form-group">
+              <div class="label-with-hint">
+                <label for="minutes">Tiempo dedicado</label>
+                <span class="input-hint">Minutos</span>
+              </div>
+              <input type="number" id="minutes" min="1" placeholder="Ej. 45" required>
+              
+              <!-- Botones de minutos rápidos -->
+              <div class="quick-minutes-row" aria-label="Seleccionar minutos frecuentes">
+                <button type="button" class="quick-min-btn" data-minutes="15">+15 min</button>
+                <button type="button" class="quick-min-btn" data-minutes="30">+30 min</button>
+                <button type="button" class="quick-min-btn" data-minutes="45">+45 min</button>
+                <button type="button" class="quick-min-btn" data-minutes="60">+60 min</button>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="submit-btn">Guardar sesión</button>
+              <button type="button" class="btn btn-secondary" id="cancel-edit-btn" style="display: none;">Cancelar</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Lista de Sesiones -->
+        <section class="card history-card" aria-labelledby="history-heading">
+          <div class="card-header history-header">
+            <div class="history-title-group">
+              <h2 id="history-heading">Historial</h2>
+              <span class="history-count" id="history-count">0</span>
+            </div>
+            <!-- Filtro de búsqueda -->
+            <div class="search-wrap">
+              <input type="text" id="history-search" class="search-input" placeholder="Filtrar por tema..." aria-label="Filtrar sesiones por tema">
+            </div>
           </div>
-        </div>
-        <div class="stat-box">
-          <span class="stat-icon">🗓️</span>
-          <div class="stat-info">
-            <span class="stat-value" id="stats-month-days">0 días</span>
-            <span class="stat-label">Días este mes</span>
+
+          <ul id="sessions-list" class="sessions-list" aria-live="polite"></ul>
+          <div id="empty-state" class="empty-state">
+            <span class="empty-state-icon" aria-hidden="true">🌱</span>
+            <p class="empty-state-title">Aún no hay sesiones registradas</p>
+            <p class="empty-state-desc">Registra tu primer bloque de estudio arriba para encender tu racha.</p>
           </div>
-        </div>
-        <div class="stat-box">
-          <span class="stat-icon">📚</span>
-          <div class="stat-info">
-            <span class="stat-value" id="stats-total-sessions">0</span>
-            <span class="stat-label">Sesiones totales</span>
-          </div>
-        </div>
-        <div class="stat-box stat-box-wide">
-          <span class="stat-icon">🎯</span>
-          <div class="stat-info">
-            <span class="stat-value" id="stats-top-topic">—</span>
-            <span class="stat-label">Tema principal</span>
-          </div>
-        </div>
+        </section>
       </div>
-
-      <!-- Indicador de Meta Diaria -->
-      <div class="goal-container" id="goal-section">
-        <div class="goal-header">
-          <div class="goal-title-wrap">
-            <span class="goal-icon">🎯</span>
-            <span class="goal-title">Meta diaria</span>
-            <span class="goal-badge" id="goal-badge" style="display: none;">¡Meta cumplida! 🎉</span>
-          </div>
-          <div class="goal-actions">
-            <span class="goal-text" id="goal-progress-text">0 / 60 min (0%)</span>
-            <button type="button" class="icon-btn" id="edit-goal-btn" title="Ajustar meta diaria" aria-label="Ajustar meta diaria">✏️</button>
-          </div>
-        </div>
-        <div class="progress-bar-track">
-          <div class="progress-bar-fill" id="goal-progress-fill" style="width: 0%;"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Formulario para Registrar o Editar Sesión -->
-    <section class="card" id="form-section">
-      <h2 id="form-title">Registrar sesión</h2>
-      <form id="session-form">
-        <div class="form-group">
-          <label for="date">Fecha</label>
-          <input type="date" id="date" required>
-        </div>
-
-        <div class="form-group">
-          <label for="topic">Tema</label>
-          <input type="text" id="topic" list="topics-list" placeholder="Ej. Bucles en JavaScript" required>
-          <datalist id="topics-list"></datalist>
-        </div>
-
-        <div class="form-group">
-          <label for="minutes">Minutos</label>
-          <input type="number" id="minutes" min="1" placeholder="Ej. 45" required>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn" id="submit-btn">Guardar sesión</button>
-          <button type="button" class="btn btn-secondary" id="cancel-edit-btn" style="display: none;">Cancelar</button>
-        </div>
-      </form>
-    </section>
-
-    <!-- Lista de Sesiones -->
-    <section class="card">
-      <h2>Historial de sesiones</h2>
-      <ul id="sessions-list" class="sessions-list"></ul>
-      <p id="empty-state" class="empty-state">Aún no has registrado ninguna sesión.</p>
-    </section>
+    </main>
   </div>
 
   <script src="app.js"></script>

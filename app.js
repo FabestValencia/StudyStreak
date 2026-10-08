@@ -36,9 +36,19 @@ const formSection = document.getElementById('form-section');
 const formTitle = document.getElementById('form-title');
 const submitBtn = document.getElementById('submit-btn');
 const cancelEditBtn = document.getElementById('cancel-edit-btn');
+const editIndicator = document.getElementById('edit-indicator');
+
+// Nuevas referencias de UI y UX
+const streakStatus = document.getElementById('streak-status');
+const streakHeaderText = document.getElementById('streak-header-text');
+const historySearch = document.getElementById('history-search');
+const historyCount = document.getElementById('history-count');
+const quickMinButtons = document.querySelectorAll('.quick-min-btn');
 
 // Estado de la sesión actualmente en edición (null si es nueva)
 let editingSessionId = null;
+// Estado del filtro de búsqueda en el historial
+let searchQuery = '';
 
 // ==========================================
 // Utilidades de Fechas (Hora local del usuario)
@@ -282,6 +292,30 @@ function render() {
   streakCount.textContent = streak;
   streakLabel.textContent = streak === 1 ? 'día de racha' : 'días de racha';
 
+  // Mensaje motivacional contextual y estado en cabecera
+  const todayStr = getPastDateString(0);
+  const studiedToday = sessions.some((s) => s.date === todayStr);
+
+  if (streakStatus) {
+    if (studiedToday) {
+      streakStatus.textContent = '¡Racha asegurada hoy! Gran trabajo de constancia.';
+    } else if (streak > 0) {
+      streakStatus.textContent = '¡Aún no has registrado hoy! Estudia para mantener la racha viva.';
+    } else {
+      streakStatus.textContent = 'Comienza hoy registrando tu primera sesión de estudio.';
+    }
+  }
+
+  if (streakHeaderText) {
+    if (studiedToday) {
+      streakHeaderText.textContent = `${streak} ${streak === 1 ? 'día' : 'días'} al día`;
+    } else if (streak > 0) {
+      streakHeaderText.textContent = 'Racha en riesgo hoy';
+    } else {
+      streakHeaderText.textContent = 'Sin racha activa';
+    }
+  }
+
   // 2. Calcular y actualizar estadísticas y meta diaria
   const stats = calculateStats(sessions);
   statsTotalTime.textContent = stats.totalTimeFormatted;
@@ -320,15 +354,39 @@ function render() {
     return b.id - a.id;
   });
 
-  // 4. Renderizar la lista
+  // Filtrado reactivo por tema o fecha si el usuario ingresó un término de búsqueda
+  let displayedSessions = sortedSessions;
+  const cleanQuery = searchQuery.trim().toLowerCase();
+  if (cleanQuery) {
+    displayedSessions = sortedSessions.filter((s) => {
+      const matchTopic = s.topic.toLowerCase().includes(cleanQuery);
+      const matchDate = formatDateDisplay(s.date).includes(cleanQuery);
+      return matchTopic || matchDate;
+    });
+  }
+
+  if (historyCount) {
+    historyCount.textContent = String(displayedSessions.length);
+  }
+
+  // 5. Renderizar la lista
   sessionsList.innerHTML = '';
 
-  if (sortedSessions.length === 0) {
-    emptyState.style.display = 'block';
+  if (displayedSessions.length === 0) {
+    emptyState.style.display = 'flex';
+    const titleEl = emptyState.querySelector('.empty-state-title');
+    const descEl = emptyState.querySelector('.empty-state-desc');
+    if (cleanQuery) {
+      if (titleEl) titleEl.textContent = 'No se encontraron sesiones';
+      if (descEl) descEl.textContent = `No hay registros que coincidan con "${searchQuery}".`;
+    } else {
+      if (titleEl) titleEl.textContent = 'Aún no hay sesiones registradas';
+      if (descEl) descEl.textContent = 'Registra tu primer bloque de estudio arriba para encender tu racha.';
+    }
   } else {
     emptyState.style.display = 'none';
 
-    sortedSessions.forEach((session) => {
+    displayedSessions.forEach((session) => {
       const li = document.createElement('li');
       li.className = 'session-item';
 
@@ -411,10 +469,13 @@ function startEditSession(id) {
   topicInput.value = sessionToEdit.topic;
   minutesInput.value = sessionToEdit.minutes;
 
-  // Actualizar títulos y botones
+  // Actualizar títulos, botones e indicador visual
   formTitle.textContent = 'Editar sesión';
   submitBtn.textContent = 'Actualizar sesión';
   cancelEditBtn.style.display = 'inline-block';
+  if (editIndicator) {
+    editIndicator.style.display = 'inline-block';
+  }
 
   // Desplazar la vista al formulario y enfocar el campo de tema
   formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -434,6 +495,9 @@ function cancelEdit() {
   formTitle.textContent = 'Registrar sesión';
   submitBtn.textContent = 'Guardar sesión';
   cancelEditBtn.style.display = 'none';
+  if (editIndicator) {
+    editIndicator.style.display = 'none';
+  }
 }
 
 /**
@@ -536,6 +600,25 @@ function handleEditGoal() {
 // Botón para editar la meta diaria
 if (editGoalBtn) {
   editGoalBtn.addEventListener('click', handleEditGoal);
+}
+
+// Botones de minutos rápidos para agilizar el registro
+quickMinButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const mins = btn.getAttribute('data-minutes');
+    if (mins) {
+      minutesInput.value = mins;
+      minutesInput.focus();
+    }
+  });
+});
+
+// Filtro de búsqueda en tiempo real para el historial
+if (historySearch) {
+  historySearch.addEventListener('input', (event) => {
+    searchQuery = event.target.value;
+    render();
+  });
 }
 
 // Inicialización cuando carga la página

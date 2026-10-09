@@ -13,7 +13,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Eliminados todos los estilos inline (`style=...`) en `index.html`, trasladando los estados iniciales a `styles.css`.
 - Verificación funcional con Chromium DevTools: 3 sesiones consecutivas (hoy, ayer, anteayer) validadas con racha en 3, récord en 3 y 0 errores en consola.
 - Constitución del proyecto formalizada en `docs/constitution.md` (6 principios innegociables).
-- Tarea 1 completada: `test/heatmap.test.js` creado con tests nativos de escala y agregación (fase RED de TDD lista para T2).
+- Tarea 4 completada: `heatmap-logic.js` implementa calendario, ViewModel y tooltip (27 tests en verde al 100% con `node --test`, rendimiento de 2.7 ms < 50 ms).
 - Lógica intacta: cálculo de racha viva en hora local, persistencia y retrocompatibilidad total.
 - Rama activa: main
 

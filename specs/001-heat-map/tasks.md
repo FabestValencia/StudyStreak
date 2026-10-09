@@ -18,21 +18,21 @@
 ### Tarea 2: Implementación de la escala de actividad y agregación de minutos
 * **Descripción:** Crear `heatmap-logic.js` con exportación dual (`window.HeatMapLogic` en navegador y `module.exports` en Node). Implementar las funciones puras `getActivityLevel(minutes)` y `aggregateMinutesByDate(sessions, todayStr)` con validación de fechas estrictas (`/^\d{4}-\d{2}-\d{2}$/`) y normalización de minutos inválidos a 0.
 * **RF cubiertos:** [RF-4](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L54-L64), [CL-1](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L106), [CL-2](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L107), [CL-3](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L108), [CL-4](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L109).
-* [ ] **Hecho cuando:** Al ejecutar `node --test` en la consola, todas las pruebas de escala cromática y agregación de sesiones pasan al 100% en verde.
+* [x] **Hecho cuando:** Al ejecutar `node --test` en la consola, todas las pruebas de escala cromática y agregación de sesiones pasan al 100% en verde.
 
 ---
 
 ### Tarea 3: Tests unitarios para calendario semanal, ViewModel y rendimiento
 * **Descripción:** Ampliar `test/heatmap.test.js` con pruebas para `getMondayOfWeek`, `formatDayTooltipText` y `buildHeatMapViewModel`. Cubrir generación de 12 y 4 semanas, etiquetas de meses, marcado de días futuros con `isFuture: true`, metadatos de accesibilidad (`tabIndex: -1` para futuros y `tabIndex: 0` para válidos), cruce de año y prueba sintética de rendimiento con 500 sesiones (< 50 ms).
 * **RF cubiertos:** [RF-2](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L36-L45), [RF-3](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L46-L53), [RF-5](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L65-L71), [RF-7](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L78-L86), [CL-5](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L110), [CL-6](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L111), [RNF-2](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L98), [RNF-4](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L100).
-* [ ] **Hecho cuando:** Los casos de prueba para el calendario, cruce de año, accesibilidad y rendimiento quedan definidos en `test/heatmap.test.js`.
+* [x] **Hecho cuando:** Los casos de prueba para el calendario, cruce de año, accesibilidad y rendimiento quedan definidos en `test/heatmap.test.js`.
 
 ---
 
 ### Tarea 4: Implementación de la generación de calendario y ViewModel del mapa
 * **Descripción:** Implementar en `heatmap-logic.js` las funciones puras `getMondayOfWeek(date)`, `formatDayTooltipText(dateStr, minutes, isFuture)` y `buildHeatMapViewModel(sessions, today, weeksCount)` ensamblando semanas de lunes a domingo, etiquetas de meses, días futuros neutrales y metadatos accesibles.
 * **RF cubiertos:** [RF-2](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L36-L45), [RF-3](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L46-L53), [RF-5](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L65-L71), [RF-7](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L78-L86), [CL-5](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L110), [CL-6](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L111), [RNF-2](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L98), [RNF-4](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L100).
-* [ ] **Hecho cuando:** El comando `node --test` ejecuta y aprueba el 100% de la suite de pruebas unitarias en verde, verificando que el benchmark de rendimiento se completa en menos de 50 ms.
+* [x] **Hecho cuando:** El comando `node --test` ejecuta y aprueba el 100% de la suite de pruebas unitarias en verde, verificando que el benchmark de rendimiento se completa en menos de 50 ms.
 
 ---
 

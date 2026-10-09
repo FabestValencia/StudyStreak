@@ -12,7 +12,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Eliminado `novalidate` en formulario para habilitar validación HTML5 nativa y añadido `aria-valuenow` dinámico a la barra de progreso.
 - Eliminados todos los estilos inline (`style=...`) en `index.html`, trasladando los estados iniciales a `styles.css`.
 - Verificación funcional con Chromium DevTools: 3 sesiones consecutivas (hoy, ayer, anteayer) validadas con racha en 3, récord en 3 y 0 errores en consola.
-- Tarea 8 completada: Tooltip flotante interactivo con posicionamiento contenido respecto al viewport, soporte ratón/teclado/móvil, omisión en días futuros y cierre en clic fuera, scroll y touchmove (57 tests pasando, verificado en DevTools).
+- Tarea 9 y Spec 001 completadas: Verificación integral de extremo a extremo en navegador real (Edge/Chromium CDP), 57/57 tests en verde en `node --test`, 0 errores en consola, renderizado limpio en escritorio (12 semanas) y móvil 375 px (4 semanas) sin desborde.
 - Lógica intacta: cálculo de racha viva en hora local, persistencia y retrocompatibilidad total.
 - Rama activa: main
 

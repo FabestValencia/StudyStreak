@@ -12,8 +12,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Eliminado `novalidate` en formulario para habilitar validación HTML5 nativa y añadido `aria-valuenow` dinámico a la barra de progreso.
 - Eliminados todos los estilos inline (`style=...`) en `index.html`, trasladando los estados iniciales a `styles.css`.
 - Verificación funcional con Chromium DevTools: 3 sesiones consecutivas (hoy, ayer, anteayer) validadas con racha en 3, récord en 3 y 0 errores en consola.
-- Constitución del proyecto formalizada en `docs/constitution.md` (6 principios innegociables).
-- Tarea 4 completada: `heatmap-logic.js` implementa calendario, ViewModel y tooltip (27 tests en verde al 100% con `node --test`, rendimiento de 2.7 ms < 50 ms).
+- Tarea 8 completada: Tooltip flotante interactivo con posicionamiento contenido respecto al viewport, soporte ratón/teclado/móvil, omisión en días futuros y cierre en clic fuera, scroll y touchmove (57 tests pasando, verificado en DevTools).
 - Lógica intacta: cálculo de racha viva en hora local, persistencia y retrocompatibilidad total.
 - Rama activa: main
 

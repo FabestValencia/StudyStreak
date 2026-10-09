@@ -59,6 +59,17 @@
   --radius-lg: 16px;
   --radius-full: 9999px;
   --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Mapa de Calor (Tokens Semánticos) */
+  --hm-cell-size: 13px;
+  --hm-cell-gap: 3px;
+  --hm-level-0: #e2e8f0;
+  --hm-level-1: #bbf7d0;
+  --hm-level-2: #4ade80;
+  --hm-level-3: #16a34a;
+  --hm-level-4: #15803d;
+  --hm-future-bg: transparent;
+  --hm-future-border: #cbd5e1;
 }
 
 /* Modo Oscuro Automático */
@@ -100,6 +111,15 @@
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
     --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.35), 0 2px 4px -2px rgba(0, 0, 0, 0.25);
     --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.45);
+
+    /* Mapa de Calor en Modo Oscuro (RNF-1) */
+    --hm-level-0: #1e293b;
+    --hm-level-1: #064e3b;
+    --hm-level-2: #059669;
+    --hm-level-3: #10b981;
+    --hm-level-4: #34d399;
+    --hm-future-bg: transparent;
+    --hm-future-border: #334155;
   }
 }
 
@@ -843,6 +863,180 @@ body {
   color: var(--text-muted);
   max-width: 280px;
   line-height: 1.4;
+}
+
+/* ==========================================================================
+   Mapa de Calor de Actividad (Heat Map - RF-1 a RF-7)
+   ========================================================================== */
+
+.heatmap-card {
+  margin-top: 24px;
+}
+
+.heatmap-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.heatmap-scroll-area {
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+
+.heatmap-months-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--hm-cell-size);
+  gap: var(--hm-cell-gap);
+  margin-left: 28px;
+  height: 18px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.heatmap-months-row span {
+  white-space: nowrap;
+}
+
+.heatmap-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.heatmap-days-col {
+  display: grid;
+  grid-template-rows: repeat(7, var(--hm-cell-size));
+  gap: var(--hm-cell-gap);
+  width: 22px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: var(--hm-cell-size);
+  text-align: right;
+  user-select: none;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--hm-cell-size);
+  grid-template-rows: repeat(7, var(--hm-cell-size));
+  gap: var(--hm-cell-gap);
+}
+
+.heatmap-cell {
+  width: var(--hm-cell-size);
+  height: var(--hm-cell-size);
+  border-radius: 2px;
+  background-color: var(--hm-level-0);
+  outline: none;
+  cursor: pointer;
+  transition: transform 0.12s ease, outline 0.12s ease;
+}
+
+.heatmap-cell:hover,
+.heatmap-cell:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 1px;
+  transform: scale(1.15);
+  z-index: 2;
+}
+
+/* Niveles cromáticos (RF-4) */
+.cell-level-0,
+.legend-cell.level-0 {
+  background-color: var(--hm-level-0);
+}
+
+.cell-level-1,
+.legend-cell.level-1 {
+  background-color: var(--hm-level-1);
+}
+
+.cell-level-2,
+.legend-cell.level-2 {
+  background-color: var(--hm-level-2);
+}
+
+.cell-level-3,
+.legend-cell.level-3 {
+  background-color: var(--hm-level-3);
+}
+
+.cell-level-4,
+.legend-cell.level-4 {
+  background-color: var(--hm-level-4);
+}
+
+/* Días futuros (RF-5) */
+.cell-future {
+  background-color: var(--hm-future-bg);
+  border: 1px dashed var(--hm-future-border);
+  cursor: default;
+  pointer-events: none;
+}
+
+.cell-future:hover,
+.cell-future:focus {
+  outline: none;
+  transform: none;
+}
+
+/* Leyenda (RF-6) */
+.heatmap-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.legend-cells {
+  display: flex;
+  gap: var(--hm-cell-gap);
+}
+
+.legend-cell {
+  width: var(--hm-cell-size);
+  height: var(--hm-cell-size);
+  border-radius: 2px;
+}
+
+/* Tooltip accesible flotante (RF-7) */
+.heatmap-tooltip {
+  position: fixed;
+  pointer-events: none;
+  background-color: #0f172a;
+  color: #f8fafc;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  transform: translateY(4px);
+  white-space: nowrap;
+}
+
+.heatmap-tooltip.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 /* Accesibilidad y Reducción de Movimiento */

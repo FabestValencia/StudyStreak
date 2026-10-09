@@ -180,10 +180,61 @@
             <p class="empty-state-desc">Registra tu primer bloque de estudio arriba para encender tu racha.</p>
           </div>
         </section>
+
+        <!-- Mapa de Calor Semanal al pie del historial (RF-1) -->
+        <section class="card heatmap-card" id="heatmap-section" aria-labelledby="heatmap-title">
+          <div class="card-header heatmap-header">
+            <div class="heatmap-title-group">
+              <h2 id="heatmap-title">Actividad de estudio</h2>
+            </div>
+          </div>
+
+          <div class="heatmap-container" id="heatmap-container">
+            <div class="heatmap-scroll-area">
+              <!-- Fila superior de meses sincronizada (RF-2) -->
+              <div class="heatmap-months-row" id="heatmap-months-row" aria-hidden="true"></div>
+
+              <div class="heatmap-body">
+                <!-- Eje vertical: etiquetas de días (Lun, Mié, Vie) (RF-2) -->
+                <div class="heatmap-days-col" aria-hidden="true">
+                  <span>Lun</span>
+                  <span></span>
+                  <span>Mié</span>
+                  <span></span>
+                  <span>Vie</span>
+                  <span></span>
+                  <span></span>
+                </div>
+
+                <!-- Matriz de celdas por columnas semanales -->
+                <div class="heatmap-grid" id="heatmap-grid" role="grid" aria-label="Calendario de actividad de estudio"></div>
+              </div>
+            </div>
+
+            <!-- Leyenda explicativa (RF-6) -->
+            <div class="heatmap-footer">
+              <div class="heatmap-legend" aria-label="Leyenda de intensidad">
+                <span class="legend-label">Menos</span>
+                <div class="legend-cells">
+                  <span class="legend-cell level-0" title="0 min"></span>
+                  <span class="legend-cell level-1" title="1-30 min"></span>
+                  <span class="legend-cell level-2" title="31-60 min"></span>
+                  <span class="legend-cell level-3" title="61-120 min"></span>
+                  <span class="legend-cell level-4" title=">120 min"></span>
+                </div>
+                <span class="legend-label">Más</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tooltip flotante único accesible (RF-7) -->
+          <div id="heatmap-tooltip" class="heatmap-tooltip" role="tooltip" aria-hidden="true"></div>
+        </section>
       </div>
     </main>
   </div>
 
+  <script src="heatmap-logic.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

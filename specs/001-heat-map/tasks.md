@@ -39,28 +39,28 @@
 ### Tarea 5: Estructura HTML y enlace de scripts
 * **Descripción:** Modificar `index.html` para insertar la tarjeta semántica `#heatmap-section` inmediatamente al pie de `history-card` (dentro de `col-secondary`), incluyendo el encabezado `h2`, contenedor de meses, contenedor de días, contenedor de celdas, leyenda de intensidad (0 a 4) y el elemento flotante `#heatmap-tooltip`. Añadir la etiqueta `<script src="heatmap-logic.js"></script>` antes de `app.js`.
 * **RF cubiertos:** [RF-1](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L30-L35), [RF-2](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L36-L45), [RF-6](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L72-L77), [RF-7](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L78-L86).
-* [ ] **Hecho cuando:** Al abrir `index.html` en el navegador, la tarjeta del mapa de calor y la leyenda se muestran en el pie del historial y `window.HeatMapLogic` está disponible en la consola sin errores.
+* [x] **Hecho cuando:** Al abrir `index.html` en el navegador, la tarjeta del mapa de calor y la leyenda se muestran en el pie del historial y `window.HeatMapLogic` está disponible en la consola sin errores.
 
 ---
 
 ### Tarea 6: Estilos CSS de la cuadrícula, temas y leyenda
 * **Descripción:** Añadir en `styles.css` la disposición con CSS Grid sincronizada mediante variables CSS (`--cell-size: 13px; --cell-gap: 3px;`), la gradación cromática de 5 niveles para modo claro y oscuro, el estilo neutral/inactivo para días futuros (`dashed border`), la leyenda horizontal inferior y el estilo base del tooltip flotante.
 * **RF cubiertos:** [RF-2](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L36-L45), [RF-4](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L54-L64), [RF-5](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L65-L71), [RF-6](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L72-L77), [RNF-1](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L97).
-* [ ] **Hecho cuando:** Los días de la cuadrícula y las muestras de la leyenda reflejan los colores de contraste apropiados en modo claro y oscuro sin romper la alineación entre columnas de meses y semanas.
+* [x] **Hecho cuando:** Los días de la cuadrícula y las muestras de la leyenda reflejan los colores de contraste apropiados en modo claro y oscuro sin romper la alineación entre columnas de meses y semanas.
 
 ---
 
 ### Tarea 7: Renderizado del mapa y adaptación reactiva 12/4 semanas
 * **Descripción:** Actualizar `app.js` para crear la función `renderHeatMap()`, invocándola en `render()`. Conectar `window.matchMedia('(max-width: 640px)')` para seleccionar 4 semanas en móvil y 12 en pantallas amplias, agregando un listener de evento `change` para re-renderizar reactivamente ante cambios de tamaño de pantalla o rotación sin recargar la página.
 * **RF cubiertos:** [RF-1](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L30-L35), [RF-3](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L46-L53), [RF-5](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L65-L71), [RF-8](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L87-L93), [RNF-3](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L99).
-* [ ] **Hecho cuando:** La cuadrícula se dibuja con datos reales de `localStorage`, se actualiza instantáneamente al agregar/eliminar una sesión, y conmuta entre 12 y 4 semanas al redimensionar la ventana por debajo o por encima de 640 px sin recargar la página.
+* [x] **Hecho cuando:** La cuadrícula se dibuja con datos reales de `localStorage`, se actualiza instantáneamente al agregar/eliminar una sesión, y conmuta entre 12 y 4 semanas al redimensionar la ventana por debajo o por encima de 640 px sin recargar la página.
 
 ---
 
 ### Tarea 8: Interacciones, accesibilidad y contención del Tooltip
 * **Descripción:** Conectar en `app.js` los controladores de eventos para el tooltip: activación en `mouseenter` y `focus` de teclado para celdas válidas; omisión total de foco y eventos en celdas futuras (`day.isFuture`); cálculo de posición contenida respecto al viewport (invirtiendo posición si desborda a la derecha o arriba); y cierre automático en móvil ante `click` fuera o eventos de desplazamiento (`scroll` / `touchmove`).
 * **RF cubiertos:** [RF-5](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L65-L71), [RF-7](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L78-L86), [RNF-4](file:///c:/Users/fabes/OneDrive/Documentos/StudyStreak/specs/001-heat-map/spec.md#L100).
-* [ ] **Hecho cuando:** Al pasar el cursor o navegar con Tab por las celdas se despliega el tooltip con día, fecha con año y minutos sin salirse de la pantalla, y en pantallas táctiles se cierra al tocar fuera o desplazarse.
+* [x] **Hecho cuando:** Al pasar el cursor o navegar con Tab por las celdas se despliega el tooltip con día, fecha con año y minutos sin salirse de la pantalla, y en pantallas táctiles se cierra al tocar fuera o desplazarse.
 
 ---
 

@@ -47,6 +47,18 @@ const historySearch = document.getElementById('history-search');
 const historyCount = document.getElementById('history-count');
 const quickMinButtons = document.querySelectorAll('.quick-min-btn');
 
+// Referencias para el Mapa de Calor (RF-1, RF-2, RF-3)
+const heatmapMonthsRow = document.getElementById('heatmap-months-row');
+const heatmapGrid = document.getElementById('heatmap-grid');
+const heatmapTooltip = document.getElementById('heatmap-tooltip');
+
+// Media query reactiva: 4 semanas en móvil estrecho vs 12 semanas en escritorio/tableta (RF-3)
+const mobileMediaQuery = window.matchMedia('(max-width: 640px)');
+
+function getHeatMapWeeksCount() {
+  return mobileMediaQuery.matches ? 4 : 12;
+}
+
 // Estado de la sesión actualmente en edición (null si es nueva)
 let editingSessionId = null;
 // Estado del filtro de búsqueda en el historial
@@ -501,6 +513,126 @@ function render() {
       sessionsList.appendChild(li);
     });
   }
+
+  // 6. Renderizar mapa de calor semanal (RF-1 a RF-8)
+  renderHeatMap(sessions);
+}
+
+/**
+ * Muestra el tooltip del mapa de calor posicionado sobre la celda objetivo.
+ * RF-7, RNF-4
+ * @param {HTMLElement} cellElement
+ * @param {string} text
+ */
+function showHeatMapTooltip(cellElement, text) {
+  if (!heatmapTooltip || !cellElement || !text) {
+    return;
+  }
+
+  heatmapTooltip.textContent = text;
+  heatmapTooltip.setAttribute('aria-hidden', 'false');
+  heatmapTooltip.classList.add('visible');
+
+  const cellRect = cellElement.getBoundingClientRect();
+  const tooltipWidth = heatmapTooltip.offsetWidth || 150;
+  const tooltipHeight = heatmapTooltip.offsetHeight || 32;
+  const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+  let pos;
+  if (typeof HeatMapLogic !== 'undefined' && typeof HeatMapLogic.calculateTooltipPosition === 'function') {
+    pos = HeatMapLogic.calculateTooltipPosition(
+      cellRect,
+      tooltipWidth,
+      tooltipHeight,
+      viewportWidth,
+      viewportHeight
+    );
+  } else {
+    pos = {
+      left: Math.round(cellRect.left + (cellRect.width / 2) - (tooltipWidth / 2)),
+      top: Math.round(cellRect.top - tooltipHeight - 6)
+    };
+  }
+
+  heatmapTooltip.style.left = `${pos.left}px`;
+  heatmapTooltip.style.top = `${pos.top}px`;
+}
+
+/**
+ * Oculta el tooltip del mapa de calor.
+ * RF-7, RNF-4
+ */
+function hideHeatMapTooltip() {
+  if (heatmapTooltip) {
+    heatmapTooltip.classList.remove('visible');
+    heatmapTooltip.setAttribute('aria-hidden', 'true');
+  }
+}
+
+/**
+ * Renderiza la cuadrícula del mapa de calor semanal consumiendo HeatMapLogic.
+ * RF-1, RF-2, RF-3, RF-5, RF-8, RNF-3, RNF-4
+ */
+function renderHeatMap(sessions = getStoredSessions()) {
+  hideHeatMapTooltip();
+
+  if (!heatmapGrid || typeof HeatMapLogic === 'undefined') {
+    return;
+  }
+
+  const weeksCount = getHeatMapWeeksCount();
+  const today = new Date();
+  const viewModel = HeatMapLogic.buildHeatMapViewModel(sessions, today, weeksCount);
+
+  // 1. Renderizar encabezado de meses sincronizado
+  if (heatmapMonthsRow) {
+    heatmapMonthsRow.innerHTML = '';
+    viewModel.weeks.forEach((week) => {
+      const monthSpan = document.createElement('span');
+      monthSpan.textContent = week.monthLabel || '';
+      heatmapMonthsRow.appendChild(monthSpan);
+    });
+  }
+
+  // 2. Renderizar celdas en CSS Grid
+  heatmapGrid.innerHTML = '';
+  const fragment = document.createDocumentFragment();
+
+  viewModel.weeks.forEach((week) => {
+    week.days.forEach((day) => {
+      const cell = document.createElement('div');
+      cell.className = 'heatmap-cell';
+      cell.setAttribute('role', 'gridcell');
+
+      if (day.isFuture) {
+        cell.classList.add('cell-future');
+        cell.tabIndex = -1;
+        cell.setAttribute('aria-disabled', 'true');
+      } else {
+        cell.classList.add(`cell-level-${day.level}`);
+        cell.tabIndex = 0;
+        cell.setAttribute('aria-label', day.tooltipText);
+        cell.dataset.date = day.dateStr;
+        cell.dataset.minutes = String(day.minutes);
+        cell.dataset.tooltip = day.tooltipText;
+
+        // Controladores de eventos para hover, foco de teclado y toque móvil (RF-7, RNF-4)
+        cell.addEventListener('mouseenter', () => showHeatMapTooltip(cell, day.tooltipText));
+        cell.addEventListener('mouseleave', hideHeatMapTooltip);
+        cell.addEventListener('focus', () => showHeatMapTooltip(cell, day.tooltipText));
+        cell.addEventListener('blur', hideHeatMapTooltip);
+        cell.addEventListener('click', (e) => {
+          e.stopPropagation();
+          showHeatMapTooltip(cell, day.tooltipText);
+        });
+      }
+
+      fragment.appendChild(cell);
+    });
+  });
+
+  heatmapGrid.appendChild(fragment);
 }
 
 // ==========================================
@@ -676,6 +808,23 @@ if (historySearch) {
     render();
   });
 }
+
+// Listener reactivo ante cambios de tamaño de pantalla o rotación sin recargar (RF-3)
+if (mobileMediaQuery.addEventListener) {
+  mobileMediaQuery.addEventListener('change', () => {
+    renderHeatMap();
+  });
+}
+
+// Despido del tooltip ante clic fuera de las celdas, scroll y touchmove (RF-7, RNF-4)
+document.addEventListener('click', (e) => {
+  if (!e.target.closest || !e.target.closest('.heatmap-cell')) {
+    hideHeatMapTooltip();
+  }
+});
+
+window.addEventListener('scroll', hideHeatMapTooltip, { passive: true });
+window.addEventListener('touchmove', hideHeatMapTooltip, { passive: true });
 
 // Inicialización cuando carga la página
 function init() {

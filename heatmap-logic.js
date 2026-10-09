@@ -261,6 +261,42 @@ function buildHeatMapViewModel(sessions, today = new Date(), weeksCount = 12) {
   };
 }
 
+/**
+ * Calculates contained tooltip coordinates relative to a target element and viewport.
+ * RF-7, RNF-4
+ * @param {{left: number, top: number, width: number, height: number, bottom: number}} targetRect
+ * @param {number} tooltipWidth
+ * @param {number} tooltipHeight
+ * @param {number} viewportWidth
+ * @param {number} viewportHeight
+ * @returns {{left: number, top: number}}
+ */
+function calculateTooltipPosition(targetRect, tooltipWidth, tooltipHeight, viewportWidth, viewportHeight) {
+  const margin = 8;
+  const gap = 6;
+
+  // Centrado horizontal sobre la celda
+  let left = targetRect.left + (targetRect.width / 2) - (tooltipWidth / 2);
+  let top = targetRect.top - tooltipHeight - gap;
+
+  // Contención horizontal para no desbordar pantalla
+  if (left < margin) {
+    left = margin;
+  } else if (left + tooltipWidth > viewportWidth - margin) {
+    left = viewportWidth - tooltipWidth - margin;
+  }
+
+  // Inversión vertical hacia abajo si desborda el margen superior
+  if (top < margin) {
+    top = targetRect.bottom + gap;
+  }
+
+  return {
+    left: Math.round(left),
+    top: Math.round(top)
+  };
+}
+
 // Exportación dual para Node.js (tests) y Navegador (window.HeatMapLogic)
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
@@ -268,7 +304,8 @@ if (typeof module !== 'undefined' && module.exports) {
     aggregateMinutesByDate,
     getMondayOfWeek,
     formatDayTooltipText,
-    buildHeatMapViewModel
+    buildHeatMapViewModel,
+    calculateTooltipPosition
   };
 }
 
@@ -278,6 +315,8 @@ if (typeof window !== 'undefined') {
     aggregateMinutesByDate,
     getMondayOfWeek,
     formatDayTooltipText,
-    buildHeatMapViewModel
+    buildHeatMapViewModel,
+    calculateTooltipPosition
   };
 }
+
